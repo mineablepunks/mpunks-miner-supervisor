@@ -78,7 +78,6 @@ def main():
                     logger.info('Successfully fetched and updated mining inputs')
                     logger.info(state)
                 except Exception as e:
-                    state['recentlyFetchedInputs'] = None
                     logger.error(f'Error fetching inputs: {e}')
                     traceback.print_stack()
 
