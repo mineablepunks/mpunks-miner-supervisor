@@ -37,7 +37,7 @@ def append_submitted_nonce(nonce):
 
 def spawn_worker(sender_bits, last_mined_assets, difficulty_target, nonces_directory):
     # The worker will start at a random nonce between 0 and 2^64
-    return subprocess.run([
+    return subprocess.Popen([
         WORKER_EXECUTABLE,
         '-a', sender_bits,
         '-l', last_mined_assets,
@@ -93,10 +93,10 @@ def main():
 
                     recently_fetched_inputs = state['recentlyFetchedInputs']
                     last_mined_assets = recently_fetched_inputs['lastMinedAssets']
-                    sender_address_bits = recently_fetched_inputs['senderAddressBits']
+                    sender_address = recently_fetched_inputs['senderAddress']
                     difficulty_target = recently_fetched_inputs['difficultyTarget']
 
-                    p = spawn_worker(sender_address_bits, last_mined_assets, difficulty_target, VALID_NONCES_DIRECTORY)
+                    p = spawn_worker(sender_address, last_mined_assets, difficulty_target, VALID_NONCES_DIRECTORY)
                     state['processes'].append(p)
 
                     state['workerManagerInputs'] = recently_fetched_inputs
