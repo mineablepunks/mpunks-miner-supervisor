@@ -42,6 +42,9 @@ def append_submitted_nonce(nonce):
 
 
 def spawn_worker(sender_bits, last_mined_assets, difficulty_target, nonces_directory):
+    if not os.path.exists(WORKER_EXECUTABLE_PATH):
+        raise Exception(f"Worker Executable Path '{WORKER_EXECUTABLE_PATH}' not found!")
+
     # The worker will start at a random nonce between 0 and 2^64
     return subprocess.Popen([
         WORKER_EXECUTABLE_PATH,
