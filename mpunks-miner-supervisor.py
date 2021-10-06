@@ -8,13 +8,19 @@ import atexit
 import subprocess
 import logging
 import sys
+import configparser
 from pathlib import Path
 
-SUBMITTED_WORK_FILENAME = 'submitted-nonces.txt'
-WORKER_EXECUTABLE = 'worker/mpunks-miner-worker-vs.exe'
-VALID_NONCES_DIRECTORY = 'validNonces'
-CONTROLLER_URI = 'http://localhost:17394'
 
+# BEGIN Parsing config
+config = configparser.ConfigParser()
+config.read("supervisor-config.ini")
+default_config = config["DEFAULT"]
+SUBMITTED_WORK_FILENAME = default_config["SubmittedWorkFilename"]
+WORKER_EXECUTABLE_PATH = default_config["WorkerExecutablePath"]
+VALID_NONCES_DIRECTORY = default_config["ValidNoncesDirectory"]
+CONTROLLER_URI = default_config["ControllerUri"]
+# END
 
 def create_valid_nonces_directory():
     if not os.path.exists(VALID_NONCES_DIRECTORY):
@@ -38,7 +44,7 @@ def append_submitted_nonce(nonce):
 def spawn_worker(sender_bits, last_mined_assets, difficulty_target, nonces_directory):
     # The worker will start at a random nonce between 0 and 2^64
     return subprocess.Popen([
-        WORKER_EXECUTABLE,
+        WORKER_EXECUTABLE_PATH,
         '-a', sender_bits,
         '-l', last_mined_assets,
         '-d', difficulty_target,
